@@ -1,0 +1,21 @@
+{
+  "name": "@sdvse/core",
+  "version": "0.1.0",
+  "description": "sdv-save-core — safe DOM-patch load/edit/save for Stardew Valley save files",
+  "license": "MIT",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.9.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

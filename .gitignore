@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Real save files used as local dev fixtures — never commit personal save data
+fixtures/private/
+
+# Deploy secrets for stardewcompanion.com stay out of the public repo
+deploy.config.*
+.env
+.env.*

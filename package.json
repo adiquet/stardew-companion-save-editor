@@ -1,0 +1,18 @@
+{
+  "name": "stardew-companion-save-editor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stardew Companion Save Editor — view and edit Stardew Valley save files locally or in the browser",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev -w @sdvse/server"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
