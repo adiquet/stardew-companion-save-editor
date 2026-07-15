@@ -152,12 +152,20 @@ for (const [id, d] of Object.entries(objects)) {
     category: d.Category ?? 0,
     price: d.Price ?? 0,
     edibility: d.Edibility ?? -300,
+    sprite: d.SpriteIndex ?? 0,
   });
 }
 
 const bigCraftables = unpack('BigCraftables.xnb');
 for (const [id, d] of Object.entries(bigCraftables)) {
-  items.push({ id, name: d.Name, type: 'BC', category: -9, price: d.Price ?? 0 });
+  items.push({
+    id,
+    name: d.Name,
+    type: 'BC',
+    category: -9,
+    price: d.Price ?? 0,
+    sprite: d.SpriteIndex ?? 0,
+  });
 }
 
 const weapons = unpack('Weapons.xnb');
