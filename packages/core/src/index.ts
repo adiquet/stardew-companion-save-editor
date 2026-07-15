@@ -45,5 +45,22 @@ export type { FriendshipInfo, FriendshipStatus } from './friendships.ts';
 export { WORLD_FIELDS, SEASONS, getWorldField, setWorldField } from './world.ts';
 export { snapshot, diffSnapshots } from './summary.ts';
 export type { SaveSnapshot, Change } from './summary.ts';
-export { applyEditToDoc, applyEditsToDoc } from './edits.ts';
+export { applyEditToDoc, applyEditsToDoc, WORLD_EDIT_KINDS } from './edits.ts';
 export type { Edit, EditResult } from './edits.ts';
+export {
+  listLocations,
+  getLocationDetail,
+  deleteWorldObject,
+  deleteTerrainFeature,
+  setWorldObjectXml,
+  setTerrainFeatureXml,
+  setBuildingXml,
+  addWorldObject,
+} from './locations.ts';
+export type {
+  LocationSummary,
+  LocationDetail,
+  WorldObjectInfo,
+  TerrainFeatureInfo,
+  BuildingInfo,
+} from './locations.ts';

@@ -15,9 +15,11 @@ import {
   diffSnapshots,
   getFriendships,
   getInventory,
+  getLocationDetail,
   getPlayerField,
   getSkills,
   getWorldField,
+  listLocations,
   snapshot,
   PLAYER_FIELDS,
   WORLD_FIELDS,
@@ -29,6 +31,8 @@ import {
   type FieldSpec,
   type FriendshipInfo,
   type InventoryItem,
+  type LocationDetail,
+  type LocationSummary,
   type SaveSnapshot,
   type SkillInfo,
   type VersionInfo,
@@ -68,6 +72,8 @@ export interface Backend {
   openSave(id: string): Promise<SaveState>;
   openFile(file: File): Promise<SaveState>;
   applyEdits(edits: Edit[]): Promise<{ results: EditResult[]; state: SaveState }>;
+  listLocations(): Promise<LocationSummary[]>;
+  locationDetail(name: string): Promise<LocationDetail>;
   write(): Promise<WriteResult>;
   discard(): Promise<SaveState>;
 }
@@ -106,6 +112,16 @@ class LocalBackend implements Backend {
       })
     );
   }
+  async listLocations(): Promise<LocationSummary[]> {
+    return json(await fetch(`/api/save/${encodeURIComponent(this.id())}/locations`));
+  }
+  async locationDetail(name: string): Promise<LocationDetail> {
+    return json(
+      await fetch(
+        `/api/save/${encodeURIComponent(this.id())}/location?name=${encodeURIComponent(name)}`
+      )
+    );
+  }
   async write(): Promise<WriteResult> {
     return json(
       await fetch(`/api/save/${encodeURIComponent(this.id())}/write`, { method: 'POST' })
@@ -126,6 +142,7 @@ class BrowserBackend implements Backend {
   private doc: SaveDocument | null = null;
   private baseline: SaveSnapshot | null = null;
   private fileName = 'save';
+  private worldChangeLog: string[] = [];
 
   listSaves(): Promise<SaveListing[]> {
     return Promise.resolve([]);
@@ -138,6 +155,7 @@ class BrowserBackend implements Backend {
     this.doc = SaveDocument.fromBytes(bytes);
     this.baseline = snapshot(this.doc);
     this.fileName = file.name;
+    this.worldChangeLog = [];
     return this.state();
   }
   private state(): SaveState {
@@ -160,13 +178,30 @@ class BrowserBackend implements Backend {
       friendships: getFriendships(doc),
       world,
       farmhandCount: farmhandsEl ? childElements(farmhandsEl).length : 0,
-      changes: diffSnapshots(this.baseline!, snapshot(doc)),
+      changes: [
+        ...diffSnapshots(this.baseline!, snapshot(doc)),
+        ...this.worldChangeLog.map((desc) => ({
+          section: 'World' as const,
+          label: 'Map edit',
+          before: '',
+          after: desc,
+        })),
+      ],
     };
   }
   async applyEdits(edits: Edit[]): Promise<{ results: EditResult[]; state: SaveState }> {
     if (!this.doc) throw new Error('No save is open');
     const results = applyEditsToDoc(this.doc, edits);
+    for (const r of results) if (r.description) this.worldChangeLog.push(r.description);
     return { results, state: this.state() };
+  }
+  async listLocations(): Promise<LocationSummary[]> {
+    if (!this.doc) throw new Error('No save is open');
+    return listLocations(this.doc);
+  }
+  async locationDetail(name: string): Promise<LocationDetail> {
+    if (!this.doc) throw new Error('No save is open');
+    return getLocationDetail(this.doc, name);
   }
   async write(): Promise<WriteResult> {
     if (!this.doc) throw new Error('No save is open');
@@ -179,6 +214,7 @@ class BrowserBackend implements Backend {
     a.click();
     URL.revokeObjectURL(url);
     this.baseline = snapshot(this.doc);
+    this.worldChangeLog = [];
     return { written: true, downloadName: this.fileName };
   }
   async discard(): Promise<SaveState> {

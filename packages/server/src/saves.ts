@@ -80,6 +80,8 @@ export interface LoadedSave {
   /** SaveGameInfo doc, when present — kept in sync for player edits */
   info: SaveDocument | null;
   baseline: SaveSnapshot;
+  /** world-structure edits the snapshot diff can't see (human descriptions) */
+  worldChangeLog: string[];
 }
 
 export class SaveSession {
@@ -100,7 +102,14 @@ export class SaveSession {
     const info = existsSync(infoPath)
       ? SaveDocument.fromBytes(new Uint8Array(readFileSync(infoPath)))
       : null;
-    const entry: LoadedSave = { id, dir, main, info, baseline: snapshot(main) };
+    const entry: LoadedSave = {
+      id,
+      dir,
+      main,
+      info,
+      baseline: snapshot(main),
+      worldChangeLog: [],
+    };
     this.loaded.set(id, entry);
     return entry;
   }
@@ -113,7 +122,13 @@ export class SaveSession {
 
   changes(id: string): Change[] {
     const entry = this.get(id);
-    return diffSnapshots(entry.baseline, snapshot(entry.main));
+    const worldChanges: Change[] = entry.worldChangeLog.map((desc) => ({
+      section: 'World' as const,
+      label: 'Map edit',
+      before: '',
+      after: desc,
+    }));
+    return [...diffSnapshots(entry.baseline, snapshot(entry.main)), ...worldChanges];
   }
 
   /** Back up both files, then overwrite in place. Returns backup paths. */
@@ -140,6 +155,7 @@ export class SaveSession {
 
     // what's on disk is the new baseline
     entry.baseline = snapshot(entry.main);
+    entry.worldChangeLog = [];
     return { backups };
   }
 

@@ -9,9 +9,11 @@ import { execFile } from 'node:child_process';
 import {
   getFriendships,
   getInventory,
+  getLocationDetail,
   getPlayerField,
   getSkills,
   getWorldField,
+  listLocations,
   PLAYER_FIELDS,
   WORLD_FIELDS,
   childElements,
@@ -133,6 +135,14 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
       }
       if (req.method === 'GET' && action === '/changes') {
         return sendJson(res, 200, session.changes(id));
+      }
+      if (req.method === 'GET' && action === '/locations') {
+        return sendJson(res, 200, listLocations(session.get(id).main));
+      }
+      if (req.method === 'GET' && action === '/location') {
+        const name = url.searchParams.get('name');
+        if (!name) return sendJson(res, 400, { error: 'Missing ?name=' });
+        return sendJson(res, 200, getLocationDetail(session.get(id).main, name));
       }
       if (req.method === 'POST' && action === '/write') {
         const entry = session.get(id);

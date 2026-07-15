@@ -6,9 +6,12 @@ import { spriteForRef } from '../sprites.ts';
 export function ItemPicker({
   onPick,
   onClose,
+  extra,
 }: {
   onPick: (item: ItemRef, stack: number, quality: number) => void;
   onClose: () => void;
+  /** additional option controls rendered next to stack/quality (e.g. tile X/Y) */
+  extra?: React.ReactNode;
 }) {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<ItemRef | null>(null);
@@ -51,25 +54,31 @@ export function ItemPicker({
           {results.length === 0 && <li className="muted empty">No matches</li>}
         </ul>
         <div className="picker-options">
-          <label>
-            Stack
-            <input
-              type="number"
-              min={1}
-              max={999}
-              value={stack}
-              onChange={(e) => setStack(Math.max(1, Math.min(999, Number(e.target.value) || 1)))}
-            />
-          </label>
-          <label>
-            Quality
-            <select value={quality} onChange={(e) => setQuality(Number(e.target.value))}>
-              <option value={0}>Normal</option>
-              <option value={1}>Silver</option>
-              <option value={2}>Gold</option>
-              <option value={4}>Iridium</option>
-            </select>
-          </label>
+          {extra ?? (
+            <>
+              <label>
+                Stack
+                <input
+                  type="number"
+                  min={1}
+                  max={999}
+                  value={stack}
+                  onChange={(e) =>
+                    setStack(Math.max(1, Math.min(999, Number(e.target.value) || 1)))
+                  }
+                />
+              </label>
+              <label>
+                Quality
+                <select value={quality} onChange={(e) => setQuality(Number(e.target.value))}>
+                  <option value={0}>Normal</option>
+                  <option value={1}>Silver</option>
+                  <option value={2}>Gold</option>
+                  <option value={4}>Iridium</option>
+                </select>
+              </label>
+            </>
+          )}
         </div>
         <div className="modal-actions">
           <button className="ghost" onClick={onClose}>

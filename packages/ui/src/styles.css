@@ -189,5 +189,14 @@ input:disabled { background: var(--bg); color: var(--muted); }
 .review-table .before { color: var(--danger); text-decoration: line-through; }
 .review-table .after { color: var(--accent-dark); font-weight: 600; }
 
+/* world editor */
+.loc-header { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+.loc-header h3 { margin: 0; }
+.subtabs { display: flex; gap: 2px; margin-left: auto; }
+.loc-row { cursor: pointer; }
+.loc-row:hover td { background: var(--success-bg); }
+.row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+button.primary.small { padding: 4px 10px; font-size: 12.5px; margin-bottom: 10px; }
+
 .tab-body { animation: fade 0.15s ease-in; }
 @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }

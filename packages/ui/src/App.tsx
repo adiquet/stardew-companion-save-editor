@@ -14,10 +14,11 @@ import { SkillsTab } from './components/SkillsTab.tsx';
 import { InventoryTab } from './components/InventoryTab.tsx';
 import { RelationshipsTab } from './components/RelationshipsTab.tsx';
 import { WorldTab } from './components/WorldTab.tsx';
+import { WorldEditorTab } from './components/WorldEditorTab.tsx';
 import { ReviewModal } from './components/ReviewModal.tsx';
 import { loadSpriteInfo } from './sprites.ts';
 
-const TABS = ['Player', 'Skills', 'Inventory', 'Relationships', 'World'] as const;
+const TABS = ['Player', 'Skills', 'Inventory', 'Relationships', 'World', 'World Editor'] as const;
 type Tab = (typeof TABS)[number];
 
 export function App() {
@@ -185,6 +186,7 @@ export function App() {
       {tab === 'Inventory' && <InventoryTab state={state} onEdit={applyEdits} />}
       {tab === 'Relationships' && <RelationshipsTab state={state} onEdit={applyEdits} />}
       {tab === 'World' && <WorldTab state={state} onEdit={applyEdits} />}
+      {tab === 'World Editor' && <WorldEditorTab backend={backend} onEdit={applyEdits} />}
 
       {reviewing && (
         <ReviewModal
