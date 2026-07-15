@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { VALID_QUALITIES, type Edit, type InventoryItem } from '@sdvse/core';
 import type { SaveState } from '../backend.ts';
 import { ItemPicker } from './ItemPicker.tsx';
+import { ItemIcon } from './ItemIcon.tsx';
+import { spriteForItem } from '../sprites.ts';
 
 const QUALITY_LABELS: Record<number, string> = {
   0: 'Normal',
@@ -116,12 +118,19 @@ function ItemCard({
   const color = CATEGORY_COLORS[item.type ?? ''] ?? '#666';
   const stackable = item.type === 'Object' || item.type === 'ColoredObject';
 
+  const sprite = spriteForItem(item.type, item.itemId);
+
   return (
     <div className="inv-card" style={{ borderTopColor: color }}>
-      <div className="inv-name" title={`${item.name} (id ${item.itemId}, ${item.type})`}>
-        {item.name}
+      <div className="inv-title">
+        <ItemIcon sprite={sprite} />
+        <div>
+          <div className="inv-name" title={`${item.name} (id ${item.itemId}, ${item.type})`}>
+            {item.name}
+          </div>
+          <div className="inv-type muted">{item.type}</div>
+        </div>
       </div>
-      <div className="inv-type muted">{item.type}</div>
       <div className="inv-controls">
         {stackable && (
           <label title="Stack size">

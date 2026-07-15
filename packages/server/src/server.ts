@@ -20,6 +20,7 @@ import {
 } from '@sdvse/core';
 import { SaveSession, defaultSavesDir, listSaves, type LoadedSave } from './saves.ts';
 import { applyEdits, type Edit } from './edits.ts';
+import { getSheet, spritesInfo } from './sprites.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.SDVSE_PORT ?? 5980);
@@ -108,6 +109,16 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (path === '/api/items' && req.method === 'GET') {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
       return void res.end(readFileSync(itemsJsonPath));
+    }
+    if (path === '/api/sprites/info' && req.method === 'GET') {
+      return sendJson(res, 200, spritesInfo());
+    }
+    const spriteMatch = path.match(/^\/api\/sprites\/([A-Z]+)\.png$/);
+    if (spriteMatch && req.method === 'GET') {
+      const sheet = getSheet(spriteMatch[1]);
+      if (!sheet) return sendJson(res, 404, { error: 'Sprite sheet unavailable' });
+      res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'max-age=3600' });
+      return void res.end(sheet.png);
     }
 
     const saveMatch = path.match(/^\/api\/save\/([^/]+)(\/[a-z]+)?$/);

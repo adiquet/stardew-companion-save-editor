@@ -170,7 +170,7 @@ for (const [id, d] of Object.entries(bigCraftables)) {
 
 const weapons = unpack('Weapons.xnb');
 for (const [id, d] of Object.entries(weapons)) {
-  items.push({ id, name: d.Name, type: 'W', category: -98 });
+  items.push({ id, name: d.Name, type: 'W', category: -98, sprite: d.SpriteIndex ?? 0 });
 }
 
 // Furniture/Boots/hats are still classic "slash-delimited string" dictionaries
@@ -201,7 +201,13 @@ for (const [id, d] of Object.entries(pants)) {
 
 const tools = unpack('Tools.xnb');
 for (const [id, d] of Object.entries(tools)) {
-  items.push({ id, name: d.Name, type: 'T', category: -99 });
+  items.push({
+    id,
+    name: d.Name,
+    type: 'T',
+    category: -99,
+    sprite: d.MenuSpriteIndex >= 0 ? d.MenuSpriteIndex : (d.SpriteIndex ?? 0),
+  });
 }
 
 // --- write ------------------------------------------------------------------

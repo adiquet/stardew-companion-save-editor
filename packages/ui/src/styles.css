@@ -133,8 +133,14 @@ input:disabled { background: var(--bg); color: var(--muted); }
   border: 1px solid var(--line); border-top: 4px solid #666; border-radius: 6px;
   background: #fff; padding: 8px; display: flex; flex-direction: column; gap: 6px; min-height: 110px;
 }
+.inv-title { display: flex; gap: 8px; align-items: flex-start; }
 .inv-name { font-weight: 600; font-size: 13.5px; line-height: 1.2; }
 .inv-type { font-size: 11px; }
+.item-icon {
+  display: inline-block; flex: none; background-repeat: no-repeat;
+  image-rendering: pixelated;
+}
+.picker-name { display: flex; align-items: center; gap: 8px; }
 .inv-controls { display: flex; gap: 6px; align-items: center; margin-top: auto; }
 .inv-controls input { width: 58px; padding: 3px 5px; font-size: 12.5px; }
 .inv-controls select { padding: 3px 4px; font-size: 12px; max-width: 90px; }

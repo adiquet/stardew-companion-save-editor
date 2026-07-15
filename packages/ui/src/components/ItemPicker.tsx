@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
 import { searchItems, type ItemRef } from '../items-db.ts';
+import { ItemIcon } from './ItemIcon.tsx';
+import { spriteForRef } from '../sprites.ts';
 
 export function ItemPicker({
   onPick,
@@ -35,7 +37,10 @@ export function ItemPicker({
                 className={selected?.id === item.id ? 'picker-row selected' : 'picker-row'}
                 onClick={() => setSelected(item)}
               >
-                <span>{item.name}</span>
+                <span className="picker-name">
+                  <ItemIcon sprite={spriteForRef(item)} scale={1.5} />
+                  {item.name}
+                </span>
                 <span className="muted">
                   id {item.id}
                   {item.price ? ` · ${item.price}g` : ''}

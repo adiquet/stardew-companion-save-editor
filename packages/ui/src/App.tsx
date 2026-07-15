@@ -15,6 +15,7 @@ import { InventoryTab } from './components/InventoryTab.tsx';
 import { RelationshipsTab } from './components/RelationshipsTab.tsx';
 import { WorldTab } from './components/WorldTab.tsx';
 import { ReviewModal } from './components/ReviewModal.tsx';
+import { loadSpriteInfo } from './sprites.ts';
 
 const TABS = ['Player', 'Skills', 'Inventory', 'Relationships', 'World'] as const;
 type Tab = (typeof TABS)[number];
@@ -32,7 +33,10 @@ export function App() {
   useEffect(() => {
     detectBackend().then(async (b) => {
       setBackend(b);
-      if (b.mode === 'local') setSaves(await b.listSaves());
+      if (b.mode === 'local') {
+        setSaves(await b.listSaves());
+        await loadSpriteInfo(); // real game art from the local install
+      }
     });
   }, []);
 
