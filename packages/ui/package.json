@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:site": "vite build --base ./ --outDir dist-site",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

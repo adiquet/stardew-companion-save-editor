@@ -200,3 +200,103 @@ button.primary.small { padding: 4px 10px; font-size: 12.5px; margin-bottom: 10px
 
 .tab-body { animation: fade 0.15s ease-in; }
 @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+
+/* ---------------------------------------------------------------------------
+   stardewcompanion.com skin — applied only when the app detects web mode
+   (data-mode="web" on <html>). Matches the site's wood/parchment theme.
+--------------------------------------------------------------------------- */
+[data-mode='web'] {
+  --bg: #e3c894;
+  --card: #fdf3dd;
+  --ink: #4a3826;
+  --muted: #7a6650;
+  --line: #c89860;
+  --accent: #7cb342;
+  --accent-dark: #5a8f2a;
+  --danger: #b1432a;
+  --warn-bg: #f8e6b8;
+  --warn-line: #e8b923;
+  --info-bg: #f0e2c0;
+  --info-line: #c89860;
+  --success-bg: #e4edcf;
+  --success-line: #7cb342;
+  --wood-dark: #5a3825;
+  --wood-light: #c89860;
+  --shadow: rgba(58, 34, 14, 0.45);
+}
+
+[data-mode='web'] body {
+  font-family: 'Quicksand', 'Segoe UI', system-ui, sans-serif;
+  background-color: #e3c894;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(255,255,255,0.12), transparent 40%),
+    repeating-linear-gradient(45deg, rgba(90,56,37,0.04) 0 2px, transparent 2px 8px),
+    linear-gradient(180deg, #ecd3a3 0%, #d9b87c 100%);
+  min-height: 100vh;
+}
+
+[data-mode='web'] .back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--wood-dark);
+  font-weight: 700;
+  text-decoration: none;
+}
+[data-mode='web'] .back-link:hover { text-decoration: underline; }
+
+[data-mode='web'] .app-header {
+  display: block;
+  text-align: center;
+  background: var(--card);
+  background-image: repeating-linear-gradient(135deg, rgba(0,0,0,.025) 0 2px, transparent 2px 6px);
+  border: 4px solid var(--wood-dark);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 0 0 3px var(--wood-light),
+    inset 0 0 0 6px var(--wood-dark),
+    4px 4px 0 var(--shadow);
+  padding: 26px 20px 20px;
+  margin: 16px 0 20px;
+}
+[data-mode='web'] .app-header h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--wood-dark);
+  text-shadow: 2px 2px 0 #f0e2c0;
+  margin-bottom: 10px;
+}
+[data-mode='web'] .app-header .muted { display: block; font-weight: 600; }
+
+[data-mode='web'] .card,
+[data-mode='web'] .dropzone,
+[data-mode='web'] .modal {
+  background: var(--card);
+  border: 3px solid var(--wood-dark);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--wood-light), 3px 3px 0 var(--shadow);
+}
+[data-mode='web'] .dropzone { border-style: solid; }
+[data-mode='web'] .dropzone.dragging { background: var(--success-bg); }
+
+[data-mode='web'] button.primary {
+  border: 2px solid var(--wood-dark);
+  box-shadow: 0 2px 0 var(--shadow);
+}
+[data-mode='web'] button.tab { font-weight: 600; }
+[data-mode='web'] button.tab.active { border-bottom-color: var(--wood-dark); }
+
+[data-mode='web'] .site-footer {
+  margin-top: 34px;
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+  background: var(--card);
+  background-image: repeating-linear-gradient(135deg, rgba(0,0,0,.025) 0 2px, transparent 2px 6px);
+  border: 3px solid var(--wood-dark);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--wood-light), 3px 3px 0 var(--shadow);
+}
+[data-mode='web'] .site-footer a { color: var(--wood-dark); font-weight: 700; }
+[data-mode='web'] .site-footer p { margin: 6px 0; }

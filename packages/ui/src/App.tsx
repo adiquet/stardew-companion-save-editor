@@ -37,6 +37,17 @@ export function App() {
       if (b.mode === 'local') {
         setSaves(await b.listSaves());
         await loadSpriteInfo(); // real game art from the local install
+      } else {
+        // stardewcompanion.com: switch on the site's wood/parchment skin
+        document.documentElement.dataset.mode = 'web';
+        for (const href of [
+          'https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@500;600;700&display=swap',
+        ]) {
+          const link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          document.head.appendChild(link);
+        }
       }
     });
   }, []);
@@ -108,7 +119,7 @@ export function App() {
 
   if (!state) {
     return (
-      <Shell>
+      <Shell mode={backend.mode}>
         {backend.mode === 'local' ? (
           <SavePicker saves={saves} onOpen={openSave} />
         ) : (
@@ -122,7 +133,7 @@ export function App() {
   const dirty = state.changes.length > 0;
 
   return (
-    <Shell>
+    <Shell mode={backend.mode}>
       <header className="save-header">
         <button className="ghost" onClick={() => setState(null)} title="Close this save">
           ← {backend.mode === 'local' ? 'All saves' : 'Choose another file'}
@@ -200,14 +211,55 @@ export function App() {
   );
 }
 
-function Shell({ children }: { children: React.ReactNode }) {
+function Shell({ children, mode }: { children: React.ReactNode; mode?: 'local' | 'web' }) {
   return (
     <div className="shell">
+      {mode === 'web' && (
+        <a className="back-link" href="../index.html">
+          ← Back to Stardew Companion
+        </a>
+      )}
       <header className="app-header">
         <h1>Stardew Companion Save Editor</h1>
         <span className="muted">fan-made · not affiliated with ConcernedApe · keep backups</span>
       </header>
       <main>{children}</main>
+      {mode === 'web' && (
+        <footer className="site-footer">
+          <p>
+            Prefer a desktop app? The same editor is a free download for Windows, Mac and Linux —
+            with real item sprites read from your own game install:{' '}
+            <a
+              href="https://github.com/adiquet/stardew-companion-save-editor/releases"
+              target="_blank"
+              rel="noopener"
+            >
+              get it on GitHub
+            </a>
+            .
+          </p>
+          <p>
+            Open source (MIT) —{' '}
+            <a
+              href="https://github.com/adiquet/stardew-companion-save-editor"
+              target="_blank"
+              rel="noopener"
+            >
+              view the code
+            </a>{' '}
+            ·{' '}
+            <a
+              href="https://github.com/adiquet/stardew-companion-save-editor/issues/new/choose"
+              target="_blank"
+              rel="noopener"
+            >
+              report a bug
+            </a>{' '}
+            (please never attach your save file). Fan-made companion — not affiliated with
+            ConcernedApe. Works best on desktop browsers.
+          </p>
+        </footer>
+      )}
     </div>
   );
 }
