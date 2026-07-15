@@ -4,9 +4,8 @@
  * serves the UI bundle, and exposes the save-editing API.
  */
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
-import { existsSync, readFileSync } from 'node:fs';
-import { extname, join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { extname } from 'node:path';
+import { execFile } from 'node:child_process';
 import {
   getFriendships,
   getInventory,
@@ -21,14 +20,11 @@ import {
 import { SaveSession, defaultSavesDir, listSaves, type LoadedSave } from './saves.ts';
 import { applyEdits, type Edit } from './edits.ts';
 import { getSheet, spritesInfo } from './sprites.ts';
+import { isPackaged, readAsset } from './assets.ts';
 
-const here = dirname(fileURLToPath(import.meta.url));
 const PORT = Number(process.env.SDVSE_PORT ?? 5980);
 const savesDir = defaultSavesDir();
 const session = new SaveSession(savesDir);
-
-const itemsJsonPath = join(here, '..', '..', 'core', 'data', 'items.json');
-const uiDist = join(here, '..', '..', 'ui', 'dist');
 
 function saveState(entry: LoadedSave) {
   const doc = entry.main;
@@ -75,24 +71,23 @@ const MIME: Record<string, string> = {
 };
 
 function serveStatic(res: ServerResponse, urlPath: string): void {
-  let rel = urlPath === '/' ? '/index.html' : urlPath;
-  const file = join(uiDist, rel);
-  // path traversal guard + existence check
-  if (!file.startsWith(uiDist) || !existsSync(file)) {
-    if (!existsSync(join(uiDist, 'index.html'))) {
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(
-        '<h1>Stardew Companion Save Editor</h1><p>UI bundle not built yet — run <code>npm run build -w @sdvse/ui</code>. The API is live at <a href="/api/saves">/api/saves</a>.</p>'
-      );
-      return;
-    }
+  const rel = (urlPath === '/' ? 'index.html' : urlPath.slice(1)).replace(/\\/g, '/');
+  // reject traversal outright; asset keys are flat "ui/…" paths
+  const file = rel.includes('..') ? null : readAsset(`ui/${rel}`);
+  if (file) {
+    res.writeHead(200, { 'Content-Type': MIME[extname(rel)] ?? 'application/octet-stream' });
+    return void res.end(file);
+  }
+  const index = readAsset('ui/index.html');
+  if (index) {
     // SPA fallback
     res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(readFileSync(join(uiDist, 'index.html')));
-    return;
+    return void res.end(index);
   }
-  res.writeHead(200, { 'Content-Type': MIME[extname(file)] ?? 'application/octet-stream' });
-  res.end(readFileSync(file));
+  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+  res.end(
+    '<h1>Stardew Companion Save Editor</h1><p>UI bundle not built yet — run <code>npm run build -w @sdvse/ui</code>. The API is live at <a href="/api/saves">/api/saves</a>.</p>'
+  );
 }
 
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -107,8 +102,10 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
       return sendJson(res, 200, listSaves(savesDir));
     }
     if (path === '/api/items' && req.method === 'GET') {
+      const items = readAsset('items.json');
+      if (!items) return sendJson(res, 404, { error: 'Item database not found' });
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      return void res.end(readFileSync(itemsJsonPath));
+      return void res.end(items);
     }
     if (path === '/api/sprites/info' && req.method === 'GET') {
       return sendJson(res, 200, spritesInfo());
@@ -158,6 +155,13 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
 }
 
 createServer((req, res) => void handle(req, res)).listen(PORT, '127.0.0.1', () => {
-  console.log(`Stardew Companion Save Editor running at http://127.0.0.1:${PORT}`);
+  const url = `http://127.0.0.1:${PORT}`;
+  console.log(`Stardew Companion Save Editor running at ${url}`);
   console.log(`Saves folder: ${savesDir}`);
+  // double-clicked executable: open the browser so it "just works"
+  if (isPackaged() && process.platform === 'win32') {
+    execFile('cmd', ['/c', 'start', '', url], () => {});
+  } else if (isPackaged() && process.platform === 'darwin') {
+    execFile('open', [url], () => {});
+  }
 });

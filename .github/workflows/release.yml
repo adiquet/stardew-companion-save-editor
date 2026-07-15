@@ -1,0 +1,41 @@
+name: Release executables
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: StardewCompanionSaveEditor.exe
+            asset: StardewCompanionSaveEditor-windows.exe
+          - os: macos-latest
+            artifact: StardewCompanionSaveEditor
+            asset: StardewCompanionSaveEditor-macos
+          - os: ubuntu-latest
+            artifact: StardewCompanionSaveEditor
+            asset: StardewCompanionSaveEditor-linux
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: node scripts/build-exe.mjs
+      - name: Rename artifact
+        shell: bash
+        run: mv "dist-exe/${{ matrix.artifact }}" "dist-exe/${{ matrix.asset }}"
+      - name: Attach to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist-exe/${{ matrix.asset }}
+          draft: false

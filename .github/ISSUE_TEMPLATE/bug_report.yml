@@ -1,0 +1,56 @@
+name: Bug report
+description: Something didn't work — a save failed to load, an edit didn't stick, the game rejected an edited file.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please don't attach your save file** — it contains your personal play data.
+        The diagnostic details below are enough to investigate almost every issue.
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: Shown in the footer / release you downloaded (e.g. 0.1.0), or "web" for the stardewcompanion.com editor.
+    validations:
+      required: true
+  - type: input
+    id: game-version
+    attributes:
+      label: Stardew Valley version of the save
+      description: Shown in the editor header when the save is open (e.g. 1.6.15).
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Where did it happen?
+      options:
+        - Downloaded app (Windows)
+        - Downloaded app (Mac/Linux)
+        - Web editor on stardewcompanion.com
+        - Running from source
+    validations:
+      required: true
+  - type: dropdown
+    id: modded
+    attributes:
+      label: Is the save modded (SMAPI / content mods)?
+      options:
+        - "No"
+        - "Yes"
+        - "Not sure"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead? Include any error message word-for-word.
+    validations:
+      required: true
+  - type: textarea
+    id: section
+    attributes:
+      label: Which editor section was involved?
+      description: e.g. Inventory slot edit, friendship points, saving/downloading, opening the file.
