@@ -22,8 +22,16 @@ npm run dev                    # start the local server
 ```
 
 Then open http://127.0.0.1:5980 — your saves are discovered automatically from
-`%APPDATA%\StardewValley\Saves`. Every save writes a timestamped backup to
-`<save folder>\sdvse-backups\` first.
+the game's saves folder:
+
+| OS          | Saves folder                      |
+| ----------- | --------------------------------- |
+| Windows     | `%AppData%\StardewValley\Saves`   |
+| Mac & Linux | `~/.config/StardewValley/Saves`   |
+
+(Override with the `SDVSE_SAVES_DIR` environment variable if yours lives
+elsewhere.) Every save writes a timestamped backup to
+`<save folder>/sdvse-backups/` first.
 
 Close Stardew Valley (and pause Steam Cloud / GOG Galaxy sync) before saving edits.
 

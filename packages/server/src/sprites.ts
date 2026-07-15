@@ -4,6 +4,7 @@
  * cached in memory — it never enters this repo and is never redistributed.
  */
 import { existsSync, readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { join } from 'node:path';
 // Texture2DReader is built into xnb-js — no scheme workarounds needed here.
 import { bufferToXnb } from 'xnb';
@@ -26,24 +27,46 @@ export const SHEETS: Record<string, SheetSpec> = {
 
 const STEAM_SUFFIX = join('steamapps', 'common', 'Stardew Valley');
 
+function steamRoots(): string[] {
+  switch (process.platform) {
+    case 'win32':
+      return ['C:\\Program Files (x86)\\Steam'];
+    case 'darwin':
+      return [join(homedir(), 'Library', 'Application Support', 'Steam')];
+    default:
+      return [join(homedir(), '.local', 'share', 'Steam'), join(homedir(), '.steam', 'steam')];
+  }
+}
+
 export function findGameDir(): string | null {
   const candidates: string[] = [];
   if (process.env.SDVSE_GAME_DIR) candidates.push(process.env.SDVSE_GAME_DIR);
-  // every Steam library listed in libraryfolders.vdf
-  const vdf = 'C:\\Program Files (x86)\\Steam\\steamapps\\libraryfolders.vdf';
-  if (existsSync(vdf)) {
-    const text = readFileSync(vdf, 'utf-8');
-    for (const m of text.matchAll(/"path"\s+"([^"]+)"/g)) {
-      candidates.push(join(m[1].replace(/\\\\/g, '\\'), STEAM_SUFFIX));
+  for (const root of steamRoots()) {
+    // every Steam library listed in libraryfolders.vdf, then the default library
+    const vdf = join(root, 'steamapps', 'libraryfolders.vdf');
+    if (existsSync(vdf)) {
+      const text = readFileSync(vdf, 'utf-8');
+      for (const m of text.matchAll(/"path"\s+"([^"]+)"/g)) {
+        candidates.push(join(m[1].replace(/\\\\/g, '\\'), STEAM_SUFFIX));
+      }
     }
+    candidates.push(join(root, STEAM_SUFFIX));
   }
-  candidates.push(
-    join('C:\\Program Files (x86)\\Steam', STEAM_SUFFIX),
-    'C:\\GOG Games\\Stardew Valley',
-    'C:\\Program Files (x86)\\GOG Galaxy\\Games\\Stardew Valley'
-  );
+  if (process.platform === 'win32') {
+    candidates.push(
+      'C:\\GOG Games\\Stardew Valley',
+      'C:\\Program Files (x86)\\GOG Galaxy\\Games\\Stardew Valley'
+    );
+  } else if (process.platform === 'darwin') {
+    candidates.push('/Applications/Stardew Valley.app');
+  } else {
+    candidates.push(join(homedir(), 'GOG Games', 'Stardew Valley', 'game'));
+  }
   for (const dir of candidates) {
-    if (existsSync(join(dir, 'Content', 'Data', 'Objects.xnb'))) return dir;
+    // Mac builds are .app bundles: Content sits inside Contents/Resources
+    for (const base of [dir, join(dir, 'Contents', 'Resources')]) {
+      if (existsSync(join(base, 'Content', 'Data', 'Objects.xnb'))) return base;
+    }
   }
   return null;
 }

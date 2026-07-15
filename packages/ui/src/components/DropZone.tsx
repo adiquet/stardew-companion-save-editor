@@ -42,9 +42,13 @@ export function DropZone({ onFile }: { onFile: (file: File) => void }) {
         .
       </p>
       <p className="muted">
-        On Windows it's in <code>%AppData%\StardewValley\Saves\&lt;YourFarm_123456789&gt;</code> —
-        pick the file named like the folder (e.g. <code>YourFarm_123456789</code>), not
-        SaveGameInfo.
+        Windows: <code>%AppData%\StardewValley\Saves\&lt;YourFarm_123456789&gt;</code>
+        <br />
+        Mac &amp; Linux: <code>~/.config/StardewValley/Saves/&lt;YourFarm_123456789&gt;</code>
+        <br />
+        Pick the file named like the folder (e.g. <code>YourFarm_123456789</code>), not
+        SaveGameInfo. On Mac, press <code>Cmd+Shift+G</code> in the file dialog and paste the
+        path — the <code>.config</code> folder is hidden by default.
       </p>
       <p className="privacy">
         🔒 Your save is opened and edited entirely in your browser. Nothing is uploaded to any

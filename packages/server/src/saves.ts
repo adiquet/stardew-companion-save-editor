@@ -28,7 +28,13 @@ import {
 } from '@sdvse/core';
 
 export function defaultSavesDir(): string {
-  return process.env.SDVSE_SAVES_DIR ?? join(process.env.APPDATA ?? homedir(), 'StardewValley', 'Saves');
+  if (process.env.SDVSE_SAVES_DIR) return process.env.SDVSE_SAVES_DIR;
+  // Windows: %AppData%\StardewValley\Saves — Mac & Linux: ~/.config/StardewValley/Saves
+  const base =
+    process.platform === 'win32' && process.env.APPDATA
+      ? process.env.APPDATA
+      : join(homedir(), '.config');
+  return join(base, 'StardewValley', 'Saves');
 }
 
 export interface SaveListing {
