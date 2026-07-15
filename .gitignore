@@ -12,3 +12,4 @@ fixtures/private/
 deploy.config.*
 .env
 .env.*
+dist-site/
