@@ -3,9 +3,9 @@
  * All writes go through a field registry so the UI, validation, and the
  * review-before-write diff all agree on what a field is.
  */
-import type { SaveDocument } from './document.js';
-import { childElements, getPathText, resolvePath, setText, textOf } from './dom.js';
-import { SKILLS, xpToLevel, type SkillName } from './skills.js';
+import type { SaveDocument } from './document.ts';
+import { childElements, getPathText, resolvePath, setText, textOf } from './dom.ts';
+import { SKILLS, xpToLevel, type SkillName } from './skills.ts';
 
 export type FieldType = 'string' | 'int' | 'bool' | 'enum';
 

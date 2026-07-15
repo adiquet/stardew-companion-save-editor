@@ -1,5 +1,5 @@
 /** Small helpers for walking/patching the save DOM by element path. */
-import type { XmlDocument, XmlElement, XmlNode } from './xml.js';
+import type { XmlDocument, XmlElement, XmlNode } from './xml.ts';
 
 const ELEMENT_NODE = 1;
 

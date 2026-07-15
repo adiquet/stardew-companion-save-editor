@@ -3,9 +3,9 @@
  * in place; anything type-specific goes through the raw-XML fallback so
  * unrecognized (including modded) items are never dropped or blanked.
  */
-import type { SaveDocument } from './document.js';
-import { child, childElements, resolvePath, setText, textOf } from './dom.js';
-import { parseXml, serializeXml, type XmlElement } from './xml.js';
+import type { SaveDocument } from './document.ts';
+import { child, childElements, resolvePath, setText, textOf } from './dom.ts';
+import { parseXml, serializeXml, type XmlElement } from './xml.ts';
 
 export const VALID_QUALITIES = [0, 1, 2, 4] as const;
 export const MAX_STACK = 999;

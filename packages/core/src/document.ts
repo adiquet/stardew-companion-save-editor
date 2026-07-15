@@ -2,8 +2,8 @@
  * SaveDocument — owns the parsed DOM plus the byte-level details (BOM)
  * needed to write the file back exactly as the game would.
  */
-import { parseXml, serializeXml, type XmlDocument, type XmlElement } from './xml.js';
-import { child, getPathText } from './dom.js';
+import { parseXml, serializeXml, type XmlDocument, type XmlElement } from './xml.ts';
+import { child, getPathText } from './dom.ts';
 
 /** Save-format versions the accessors were built and verified against. */
 export const VERIFIED_GAME_VERSIONS = ['1.6'];

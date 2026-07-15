@@ -1,0 +1,19 @@
+{
+  "name": "@sdvse/server",
+  "version": "0.1.0",
+  "description": "Stardew Companion Save Editor — local server with direct Saves-folder access",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "node src/server.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@sdvse/core": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  }
+}

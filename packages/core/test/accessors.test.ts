@@ -22,7 +22,7 @@ import {
   setWorldField,
   snapshot,
   diffSnapshots,
-} from '../src/index.js';
+} from '../src/index.ts';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const realSave = join(here, '..', '..', '..', 'fixtures', 'private', 'MrBurns_146087234');

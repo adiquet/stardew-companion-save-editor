@@ -2,9 +2,9 @@
  * NPC friendship accessors over the <friendshipData> dictionary:
  * <item><key><string>NPC</string></key><value><Friendship>…</Friendship></value></item>
  */
-import type { SaveDocument } from './document.js';
-import { child, childElements, resolvePath, setText, textOf } from './dom.js';
-import type { XmlElement } from './xml.js';
+import type { SaveDocument } from './document.ts';
+import { child, childElements, resolvePath, setText, textOf } from './dom.ts';
+import type { XmlElement } from './xml.ts';
 
 export const FRIENDSHIP_STATUSES = [
   'Friendly',

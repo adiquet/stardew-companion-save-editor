@@ -3,11 +3,11 @@
  * can touch, before and after edits, and describe the differences in plain
  * language for the review-before-write screen.
  */
-import type { SaveDocument } from './document.js';
-import { getFriendships } from './friendships.js';
-import { getInventory } from './inventory.js';
-import { getPlayerField, getSkills, PLAYER_FIELDS } from './player.js';
-import { getWorldField, WORLD_FIELDS } from './world.js';
+import type { SaveDocument } from './document.ts';
+import { getFriendships } from './friendships.ts';
+import { getInventory } from './inventory.ts';
+import { getPlayerField, getSkills, PLAYER_FIELDS } from './player.ts';
+import { getWorldField, WORLD_FIELDS } from './world.ts';
 
 export interface SaveSnapshot {
   player: Record<string, string | null>;

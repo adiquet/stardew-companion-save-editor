@@ -2,9 +2,9 @@
  * World-level basics on the <SaveGame> root: date, weather, misc scalars.
  * Only available for the full save file (kind === 'full').
  */
-import type { SaveDocument } from './document.js';
-import { getPathText, resolvePath, setText } from './dom.js';
-import type { FieldSpec } from './player.js';
+import type { SaveDocument } from './document.ts';
+import { getPathText, resolvePath, setText } from './dom.ts';
+import type { FieldSpec } from './player.ts';
 
 export const SEASONS = ['spring', 'summer', 'fall', 'winter'] as const;
 
